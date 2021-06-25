@@ -1,5 +1,23 @@
-# Audiomask: An Adversarial Steganographic Method for Imperceptible Video Watermarking
+# Adversaria: An Adversarial Steganographic Method for Imperceptible Video Watermarking
 Audiomask is an imperceptible watermarking tool for verifying video content ownership.
+
+## Overview
+- Use this tool in your custom service (e.g. social network, platform, forum, etc) where this applies and makes sense to implement.
+
+## Install
+`pip install adversaria`
+
+## Usage
+Import the library with a de-facto alias if you'd like.
+`import adversaria as ara`
+Import the function to generate the perturbation key based on the metadata of both the original video content data, the `creator_id`, and among other variables. Even if target users know that their content is imperceptibly perturbed, they can't detransform the image if they don't know the metadata and psuedorandom unsigned long value that was used to create the key that they don't have access to, making it nearly impossible to decode the video content itself.  
+`from adversaria.key_generation import generate_perturbation_key`
+Given that we have created a unique `perturbation_key` with `generate_perturbation_key`, we must now apply this unique and imperceptible transformation scheme to the target content linked to the target user by iterating over the frames of the video content.
+`from adversaria.adversarial import apply_perturbation_key`
+As far as generating the unique `perturbation_key` for your target user, you must split the video so that each frame can be imperceptibly perturbed and its unique perturbation_key extrapolated continuously. It is optional to store JSON metadata for each frame and the norm-value and grad norm-type applied to each frame as far as understanding the constant and non-constant variables applied to generate these keys.
+`from adversaria.video_split import split_video`
+It is important to have persistent state management regarding the metadata assigned to both the vertices and the edges that link the original and imperceptibly perturbed video content to track (psuedonymous or non-pseudonymous) users. Thus, the `store_perturbation_state` function is meant to store a JSON object for each local graph that links an original post of video content to all the copies generated for each user. It'd be important to then setup the backend to handle this on-prem real-time perturbation operation because it requires generating copies of video only visible to target users that interact with the target content that is posted.
+`from adversaria.utils import store_perturbation_state`
 
 ## Algorithm
 1. Split a video into a sum of its frames 
@@ -16,7 +34,6 @@ Note: we can track the dissemination of the content because users can only acces
 
 ## Supported Formats
 - Video 
-- Images
 
 ## References
 - https://arxiv.org/pdf/1112.2809.pdf
